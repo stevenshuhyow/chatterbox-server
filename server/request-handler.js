@@ -22,7 +22,11 @@ var requestHandler = function(request, response) {
   // Documentation for both request and response can be found in the HTTP section at
   // http://nodejs.org/documentation/api/
 
+
   // Do some basic logging.
+  //
+// console.log("request", request);
+// console.log("response", response);
   //
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
@@ -30,7 +34,6 @@ var requestHandler = function(request, response) {
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -39,11 +42,11 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  // response.writeHead(statusCode, headers);
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -52,7 +55,36 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end("Hello, World!");
+  //
+  //
+  // //
+
+  var returnValue = {results:[]};
+
+  if(request.method === "GET"){
+
+    var statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(returnValue));
+  }
+
+  if(request.method === "POST"){
+    var statusCode = 201;
+    returnValue.results.push(request.body);
+    console.log(request);
+    // var length = returnValue.results.length;
+
+
+
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(returnValue.results));
+  }
+
+
+
+
+
+  // response.end("Hello, World!");
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -71,3 +103,4 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
+module.exports = requestHandler;

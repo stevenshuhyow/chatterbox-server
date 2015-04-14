@@ -12,7 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var returnValue = {results:[]};
-var requestHandler = function(request, response) {
+var requestHandler = exports.requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -75,23 +75,13 @@ var requestHandler = function(request, response) {
       chunk += data;
     });
 
-    var total;
+
     request.on('end', function(){
-      console.log("chunk in end", chunk);
-      // total = JSON.parse(chunk);
-      total = chunk;
-      returnValue.results.push(total);
-      console.log("returnValue:" + returnValue);
-      response.writeHead(statusCode, headers);
-      console.log("returnValue.results", returnValue.results);
-      console.log('JSON.parse(returnValue.results):'+ JSON.parse(returnValue.results));
-      response.end(JSON.stringify(returnValue.results));
+      chunk = JSON.parse(chunk);
+      returnValue.results.push(chunk);
     });
-
-
-    // var length = returnValue.results.length;
-
-
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(returnValue));
 
   }
 
@@ -118,4 +108,4 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 
-module.exports = requestHandler;
+

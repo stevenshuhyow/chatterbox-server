@@ -12,7 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var returnValue = {results:[]};
-var requestHandler = exports.requestHandler = function(request, response) {
+var requestHandler  = exports.requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -31,7 +31,7 @@ var requestHandler = exports.requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log("Serving request type " + request.method + " for url " + request.url);
+  // console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
 
@@ -58,22 +58,21 @@ var requestHandler = exports.requestHandler = function(request, response) {
   //
   //
   // //
+  var statusCode;
 
   if(request.url !== '/classes/messages'){
-    var statusCode = 404;
+    statusCode = 404;
     response.writeHead(statusCode, headers);
     response.end();
   }
 
   if(request.method === "GET"){
 
-    var statusCode = 200;
-    response.writeHead(statusCode, headers);
-    response.end(JSON.stringify(returnValue));
+    statusCode = 200;
   }
 
   if(request.method === "POST"){
-    var statusCode = 201;
+    statusCode = 201;
 
     var chunk = '';
     request.on('data', function(data){
@@ -85,11 +84,11 @@ var requestHandler = exports.requestHandler = function(request, response) {
       chunk = JSON.parse(chunk);
       returnValue.results.push(chunk);
     });
-    response.writeHead(statusCode, headers);
-    response.end(JSON.stringify(returnValue));
 
   }
 
+  response.writeHead(statusCode, headers);
+  response.end(JSON.stringify(returnValue));
 
 
 
@@ -112,5 +111,6 @@ var defaultCorsHeaders = {
   "access-control-allow-headers": "content-type, accept",
   "access-control-max-age": 10 // Seconds.
 };
+
 
 

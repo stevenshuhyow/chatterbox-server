@@ -13,7 +13,7 @@ $(function() {
 
     init: function() {
       // Get username
-      app.username = window.location.search.substr(10);
+      // app.username = window.location.search.substr(10);
 
       // Cache jQuery selectors
       app.$main = $('#main');
@@ -44,7 +44,7 @@ $(function() {
         url: app.server,
         type: 'POST',
         data: JSON.stringify(data),
-        contentType: 'application/json',
+        contentType: 'plain/text',
         success: function (data) {
           console.log('chatterbox: Message sent');
           // Trigger a fetch to update the messages, pass true to animate
@@ -59,8 +59,8 @@ $(function() {
       $.ajax({
         url: app.server,
         type: 'GET',
-        contentType: 'application/json',
-        data: { order: '-createdAt'},
+        contentType: 'plain/text',
+        // data: { order: '-createdAt'},
         success: function(data) {
           console.log('chatterbox: Messages fetched');
 
@@ -210,7 +210,7 @@ $(function() {
     },
     handleSubmit: function(evt) {
       var message = {
-        username: app.username,
+        // username: app.username,
         text: app.$message.val(),
         roomname: app.roomname || 'lobby'
       };

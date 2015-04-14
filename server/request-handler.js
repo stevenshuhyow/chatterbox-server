@@ -59,6 +59,11 @@ var requestHandler = exports.requestHandler = function(request, response) {
   //
   // //
 
+  if(request.url !== '/classes/messages'){
+    var statusCode = 404;
+    response.writeHead(statusCode, headers);
+    response.end();
+  }
 
   if(request.method === "GET"){
 

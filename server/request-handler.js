@@ -11,7 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var returnValue = {results:[]};
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -59,7 +59,6 @@ var requestHandler = function(request, response) {
   //
   // //
 
-  var returnValue = {results:[]};
 
   if(request.method === "GET"){
 
@@ -70,14 +69,30 @@ var requestHandler = function(request, response) {
 
   if(request.method === "POST"){
     var statusCode = 201;
-    returnValue.results.push(request.body);
-    console.log(request);
+
+    var chunk = '';
+    request.on('data', function(data){
+      chunk += data;
+    });
+
+    var total;
+    request.on('end', function(){
+      console.log("chunk in end", chunk);
+      // total = JSON.parse(chunk);
+      total = chunk;
+      returnValue.results.push(total);
+      console.log("returnValue:" + returnValue);
+      response.writeHead(statusCode, headers);
+      console.log("returnValue.results", returnValue.results);
+      console.log('JSON.parse(returnValue.results):'+ JSON.parse(returnValue.results));
+      response.end(JSON.stringify(returnValue.results));
+    });
+
+
     // var length = returnValue.results.length;
 
 
 
-    response.writeHead(statusCode, headers);
-    response.end(JSON.stringify(returnValue.results));
   }
 
 

@@ -18,6 +18,7 @@ $(function() {
       // Cache jQuery selectors
       app.$main = $('#main');
       app.$message = $('#message');
+      app.$username = $('#username');
       app.$chats = $('#chats');
       app.$roomSelect = $('#roomSelect');
       app.$send = $('#send');
@@ -38,6 +39,7 @@ $(function() {
       app.startSpinner();
       // Clear messages input
       app.$message.val('');
+      app.$username.val('');
 
       // POST the message to the server
       $.ajax({
@@ -63,7 +65,9 @@ $(function() {
         // data: { order: '-createdAt'},
         success: function(data) {
           console.log('chatterbox: Messages fetched');
-
+          console.log(data);
+          data = JSON.parse(data);
+          console.log('parsed data', data);
           // Don't bother if we have nothing to work with
           if (!data.results || !data.results.length) { return; }
 
@@ -72,7 +76,7 @@ $(function() {
           var displayedRoom = $('.chat span').first().data('roomname');
           app.stopSpinner();
           // Only bother updating the DOM if we have a new message
-          if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
+          // if (true) {
             // Update the UI with the fetched rooms
             app.populateRooms(data.results);
 
@@ -81,7 +85,7 @@ $(function() {
 
             // Store the ID of the most recent message
             app.lastMessageId = mostRecentMessage.objectId;
-          }
+          // }
         },
         error: function(data) {
           console.error('chatterbox: Failed to fetch messages');
@@ -209,8 +213,9 @@ $(function() {
       }
     },
     handleSubmit: function(evt) {
+      evt.preventDefault();
       var message = {
-        // username: app.username,
+        username: app.$username.val(),
         text: app.$message.val(),
         roomname: app.roomname || 'lobby'
       };
@@ -218,7 +223,7 @@ $(function() {
       app.send(message);
 
       // Stop the form from submitting
-      evt.preventDefault();
+      // evt.preventDefault();
     },
     startSpinner: function(){
       $('.spinner img').show();

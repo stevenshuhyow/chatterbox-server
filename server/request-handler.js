@@ -11,7 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var returnValue = {results:[]};
+var returnValue = {results:[{"username":"Steve","text":"Do my taxes!"}]};
 var requestHandler  = exports.requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -42,7 +42,7 @@ var requestHandler  = exports.requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'application/json';
+  headers['Content-Type'] = 'plain/text';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -62,6 +62,14 @@ var requestHandler  = exports.requestHandler = function(request, response) {
 
   if(request.url !== '/classes/messages'){
     statusCode = 404;
+    response.writeHead(statusCode, headers);
+    response.end();
+  }
+
+  if(request.method === "OPTIONS"){
+    statusCode = 200;
+    // headers = defaultCorsHeaders;
+    // console.log("options?", headers);
     response.writeHead(statusCode, headers);
     response.end();
   }
